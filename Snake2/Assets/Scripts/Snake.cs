@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Snake : MonoBehaviour
     // Reference of Sneak segments Transforms
     public Transform segmentPrefab;
 
+    public int initialSize = 4;
+
     // It will be needed to if statements in key bindings
     public bool horizontal = true;
     public bool vertical = true;
@@ -24,6 +27,9 @@ public class Snake : MonoBehaviour
 
         // Adding to list head of the sneak
         listOfSegments.Add(transform);
+
+        // Fresh start
+        ResetState();
     }
     private void Update()
     {
@@ -56,6 +62,11 @@ public class Snake : MonoBehaviour
             horizontal = false;
         }
 
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(3);
+        }
+
         Debug.Log(listOfSegments.Count);
     }
 
@@ -78,10 +89,31 @@ public class Snake : MonoBehaviour
             Grow();
         }
 
-        else
+        else if (collision.tag == "Obstacle")
         {
             // when Sneak collide with own tail or walls reset game
+            ResetState();
+
+            SceneManager.LoadScene(2);
         }
+    }
+
+    private void ResetState()
+    {
+        for (int i = 1; i < listOfSegments.Count; i++)
+        {
+            Destroy(listOfSegments[i].gameObject);
+        }
+
+        listOfSegments.Clear();
+        listOfSegments.Add(transform);
+
+        for (int i = 1; i < initialSize; i++)
+        {
+            listOfSegments.Add(Instantiate(segmentPrefab));
+        }
+
+        transform.position = Vector2.zero;
     }
     
     // what happen when Sneak eat Food 
