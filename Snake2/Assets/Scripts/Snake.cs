@@ -17,11 +17,15 @@ public class Snake : MonoBehaviour
     public int initialSize = 4;
 
     // It will be needed to if statements in key bindings
-    public bool horizontal = true;
-    public bool vertical = true;
+    public bool horizontal, vertical;
+    
 
     private void Start()
     {
+        // let the sneak to turn only up or down because default direction is right
+        vertical = true;
+        horizontal = false;
+
         // Initialization of list
         listOfSegments = new List<Transform>();
 
